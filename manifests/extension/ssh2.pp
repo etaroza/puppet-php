@@ -12,9 +12,13 @@ define php::extension::ssh2(
   $version = '0.12'
 ) {
   require php::config
+
+  # Get full patch version of PHP
+  $patch_php_version = php_get_patch_version($php)
+
   # Require php version eg. php::5_4_10
   # This will compile, install and set up config dirs if not present
-  php_require($php)
+  php_require($patch_php_version)
 
   package { 'libssh2': }
 
@@ -23,7 +27,7 @@ define php::extension::ssh2(
   $url = "http://pecl.php.net/get/ssh2-${version}.tgz"
 
   # Final module install path
-  $module_path = "${php::config::root}/versions/${php}/modules/${extension}.so"
+  $module_path = "${php::config::root}/versions/${patch_php_version}/modules/${extension}.so"
 
   # Additional options
   $configure_params = "--with-ssh2=${boxen::config::homebrewdir}/opt/libssh2"
@@ -35,7 +39,7 @@ define php::extension::ssh2(
     package_url      => $url,
     homebrew_path    => $boxen::config::homebrewdir,
     phpenv_root      => $php::config::root,
-    php_version      => $php,
+    php_version      => $patch_php_version,
     cache_dir        => $php::config::extensioncachedir,
     provider         => pecl,
     configure_params => $configure_params,
@@ -44,7 +48,7 @@ define php::extension::ssh2(
 
   # Add config file once extension is installed
 
-  file { "${php::config::configdir}/${php}/conf.d/${extension}.ini":
+  file { "${php::config::configdir}/${patch_php_version}/conf.d/${extension}.ini":
     content => template('php/extensions/generic.ini.erb'),
     require => Php_extension[$name],
   }

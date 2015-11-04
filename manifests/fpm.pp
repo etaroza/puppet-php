@@ -10,23 +10,8 @@ define php::fpm(
 ){
   require php::config
 
-  # Current supported and secure versions
-  $secure_5_6 = $php::config::secure_versions['5.6']
-  $secure_5_5 = $php::config::secure_versions['5.5']
-  $secure_5_4 = $php::config::secure_versions['5.4']
-
-  # Specify secure version if no minor point specified
-  if $version == '5' {
-    $patch_version = $secure_5_6
-  } elsif $version == '5.6' {
-    $patch_version = $secure_5_6
-  } elsif $version == '5.5' {
-    $patch_version = $secure_5_5
-  } elsif $version == '5.4' {
-    $patch_version = $secure_5_4
-  } else {
-    $patch_version = $version
-  }
+  # Get full patch version of PHP
+  $patch_version = php_get_patch_version($version)
 
   # Config file locations
   $version_config_root = "${php::config::configdir}/${patch_version}"

@@ -195,22 +195,25 @@ define php::project(
   }
 
   if $php {
+    # Get full patch version of PHP
+    $patch_php_version = php_get_patch_version($php)
+
     # Set the local version of PHP
     php::local { $repo_dir:
-      version => $php,
+      version => $patch_php_version,
       require => Repository[$repo_dir],
     }
 
     # Spin up a PHP-FPM pool for this project, listening on an Nginx socket
-    php::fpm::pool { "${name}-${php}":
-      version      => $php,
+    php::fpm::pool { "${name}-${patch_php_version}":
+      version      => $patch_php_version,
       socket_path  => "${boxen::config::socketdir}/${name}",
       require      => File["${nginx::config::sitesdir}/${name}.conf"],
       max_children => 10,
     }
 
     if $fpm_pool {
-      Php::Fpm::Pool["${name}-${php}"] {
+      Php::Fpm::Pool["${name}-${patch_php_version}"] {
         fpm_pool => $fpm_pool
       }
     }

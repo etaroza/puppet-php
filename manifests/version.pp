@@ -11,38 +11,8 @@ define php::version(
   require php
   include mysql::config
 
-  # Current supported and secure versions
-  $secure_5_6 = $php::config::secure_versions['5.6']
-  $secure_5_5 = $php::config::secure_versions['5.5']
-  $secure_5_4 = $php::config::secure_versions['5.4']
-
-  # Specify secure version if no minor point specified
-  if $version == '5' {
-    $patch_version = $secure_5_6
-  } elsif $version == '5.6' {
-    $patch_version = $secure_5_6
-  } elsif $version == '5.5' {
-    $patch_version = $secure_5_5
-  } elsif $version == '5.4' {
-    $patch_version = $secure_5_4
-  } else {
-    $patch_version = $version
-  }
-
-  # Version is greater than or equal to 5.6.0 and less than the 5.6 secure version
-  if $php::config::secure_warning and versioncmp($patch_version, '5.6') >= 0 and versioncmp($patch_version, $secure_5_6) < 0 {
-    warning("You are installing PHP ${patch_version} which is known to be insecure. The current secure 5.6.X version is ${secure_5_6}")
-  }
-
-  # Version is greater than or equal to 5.5.0 and less than the 5.5 secure version
-  if $php::config::secure_warning and versioncmp($patch_version, '5.5') >= 0 and versioncmp($patch_version, $secure_5_5) < 0 {
-    warning("You are installing PHP ${patch_version} which is known to be insecure. The current secure 5.5.X version is ${secure_5_5}")
-  }
-
-  # Version is less than the minimum secure version
-  if $php::config::secure_warning and versioncmp($patch_version, $secure_5_4) < 0 {
-    warning("You are installing PHP ${patch_version} which is known to be insecure. The current secure 5.4.X version is ${secure_5_4}")
-  }
+  # Get full patch version of PHP
+  $patch_version = php_get_patch_version($version, true)
 
   # Install location
   $dest = "${php::config::root}/versions/${patch_version}"
