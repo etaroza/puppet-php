@@ -77,7 +77,7 @@ php::fpm::pool { "${name}-${version}":
 
 ```
 
-## PHP Project Usage ##
+## PHP Project Usage
 
 A sample PHP project manifest is provided in `manifests/project.pp` which will run a PHP project using PHP-FPM under Nginx. This can be used directly, but may require tweaking for your own purposes.
 
