@@ -2,10 +2,10 @@
 
 This release may contain breaking changes.
 
-* Specify cache directory for Image Magick extension (Jens Lind)
-* php.ini adjustments (Jens Lind, @typhonius)
-* Use Homebrew OpenSSL and curl (Jens Lind, @alexmace, @olofjohansson)
-* Remove SNMP from compile flags (Jens Lind)
+* Specify cache directory for Image Magick extension (@jenslind)
+* php.ini adjustments (@jenslind, @typhonius)
+* Use Homebrew OpenSSL and curl (@jenslind, @alexmace, @olofjohansson)
+* Remove SNMP from compile flags (@jenslind)
 * Fix usage of libssh2 for ssh2 extension (@rolfvandekrol)
 * Composer updated to 1.2.1 (@alexmace)
 * Add MongoDB extension (@alexmace)
