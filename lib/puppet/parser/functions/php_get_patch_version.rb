@@ -8,7 +8,7 @@ module Puppet::Parser::Functions
 
     # Specify secure version if no minor point specified
     patch_version = case version.to_s
-                    when '7', '7.1'
+                    when '', '7', '7.1'
                       secure_versions['7.1']
                     when '7.0'
                       secure_versions['7.0']

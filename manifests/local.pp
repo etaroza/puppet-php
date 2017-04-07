@@ -8,14 +8,17 @@
 define php::local($version = undef, $ensure = present) {
   include php::config
 
-  if $version != 'system' and $ensure == present {
+  # Get full patch version of PHP
+  $patch_php_version = php_get_patch_version($version)
+
+  if $patch_php_version != 'system' and $ensure == present {
     # Requires php version eg. php::5_4_10
-    php_require($version)
+    php_require($patch_php_version)
   }
 
   file { "${name}/.php-version":
     ensure  => $ensure,
-    content => "${version}\n",
+    content => "${patch_php_version}\n",
     replace => true
   }
 }

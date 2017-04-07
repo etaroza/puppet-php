@@ -11,29 +11,29 @@ define php::fpm(
   require php::config
 
   # Get full patch version of PHP
-  $patch_version = php_get_patch_version($version)
+  $patch_php_version = php_get_patch_version($version)
 
   # Config file locations
-  $version_config_root = "${php::config::configdir}/${patch_version}"
+  $version_config_root = "${php::config::configdir}/${patch_php_version}"
   $fpm_config          = "${version_config_root}/php-fpm.conf"
   $fpm_pool_config_dir = "${version_config_root}/pool.d"
-  $pid_file            = "${php::config::datadir}/${patch_version}.pid"
+  $pid_file            = "${php::config::datadir}/${patch_php_version}.pid"
 
   # Log files
-  $error_log = "${php::config::logdir}/${patch_version}.fpm.error.log"
+  $error_log = "${php::config::logdir}/${patch_php_version}.fpm.error.log"
 
   if $ensure == present {
     # Require php version eg. php::version { '5_4_10': }
     # This will compile, install and set up config dirs if not present
-    php_require($patch_version)
+    php_require($patch_php_version)
 
     # FPM Binary
-    $bin = "${php::config::root}/versions/${patch_version}/sbin/php-fpm"
+    $bin = "${php::config::root}/versions/${patch_php_version}/sbin/php-fpm"
 
     # Set up FPM config
     file { $fpm_config:
       content => template('php/php-fpm.conf.erb'),
-      notify  => Php::Fpm::Service[$patch_version],
+      notify  => Php::Fpm::Service[$patch_php_version],
     }
 
     # Set up FPM Pool config directory
@@ -47,8 +47,8 @@ define php::fpm(
 
     # Create a default pool, as FPM won't start without one
     # Listen on a fake socket for now
-    $pool_name    = $patch_version
-    $socket_path  = "${boxen::config::socketdir}/${patch_version}"
+    $pool_name    = $patch_php_version
+    $socket_path  = "${boxen::config::socketdir}/${patch_php_version}"
     $pm           = 'static'
     $max_children = 1
 
@@ -57,15 +57,15 @@ define php::fpm(
     $min_spare_servers = 1
     $max_spare_servers = 1
 
-    file { "${fpm_pool_config_dir}/${patch_version}.conf":
+    file { "${fpm_pool_config_dir}/${patch_php_version}.conf":
       content => template('php/php-fpm-pool.conf.erb'),
     }
 
     # Launch our FPM Service
 
-    php::fpm::service{ $patch_version:
+    php::fpm::service{ $patch_php_version:
       ensure    => running,
-      subscribe => File["${fpm_pool_config_dir}/${patch_version}.conf"],
+      subscribe => File["${fpm_pool_config_dir}/${patch_php_version}.conf"],
     }
 
   } else {
@@ -78,10 +78,10 @@ define php::fpm(
         $fpm_pool_config_dir,
       ]:
       ensure  => absent,
-      require => Php::Fpm::Service[$patch_version],
+      require => Php::Fpm::Service[$patch_php_version],
     }
 
-    php::fpm::service{ $patch_version:
+    php::fpm::service{ $patch_php_version:
       ensure => absent,
     }
   }
