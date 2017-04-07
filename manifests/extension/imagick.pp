@@ -40,6 +40,7 @@ define php::extension::imagick(
     phpenv_root      => $php::config::root,
     php_version      => $patch_php_version,
     configure_params => $configure_params,
+    cache_dir        => $php::config::extensioncachedir,
   }
 
   # Add config file once extension is installed

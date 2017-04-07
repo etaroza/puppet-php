@@ -85,6 +85,18 @@ Puppet::Type.type(:php_version).provide(:php_source) do
     puts "Installing PHP #{@resource[:version]}, this may take a while..."
     configure(version)
 
+    # Change libexecdir, this is how homebrew does it.
+    makefile = "#{@resource[:phpenv_root]}/php-src/Makefile"
+    makefileOutdata = File.read(makefile).gsub(/^INSTALL_IT = \$\(mkinstalldirs\) '([^']+)' (.+) LIBEXECDIR=([^\s]+) (.+)$/, "INSTALL_IT = $(mkinstalldirs) '#{@resource[:phpenv_root]}/versions/#{@resource[:version]}/libexec/apache2' \\2 LIBEXECDIR='#{@resource[:phpenv_root]}/versions/#{@resource[:version]}/libexec/apache2' \\4")
+
+    # Fix for openssl when building 5.5
+    # Discussed here: https://github.com/Homebrew/homebrew-php/issues/1941
+    makefileOutdata = makefileOutdata.gsub(/^EXTRA_LIBS = (.*)/, "EXTRA_LIBS = \\1 #{@resource[:homebrew_path]}/opt/openssl/lib/libssl.dylib #{@resource[:homebrew_path]}/opt/openssl/lib/libcrypto.dylib")
+
+    File.open(makefile, 'w') do |out|
+      out << makefileOutdata
+    end
+
     # Make & install
     make
     make_install
@@ -251,19 +263,23 @@ Puppet::Type.type(:php_version).provide(:php_source) do
       "--with-gettext=#{@resource[:homebrew_path]}/opt/gettext",
       "--with-gmp=#{@resource[:homebrew_path]}/opt/gmp",
       "--with-zlib=#{@resource[:homebrew_path]}/opt/zlibphp",
-      "--with-snmp=/usr",
+      "--without-snmp",
       "--with-libedit",
       "--with-mhash",
-      "--with-curl",
-      "--with-openssl=/usr",
+      "--with-curl=#{@resource[:homebrew_path]}/opt/curl",
+      "--with-openssl=#{@resource[:homebrew_path]}/opt/openssl",
       "--with-bz2=/usr",
 
       "--with-mysql-sock=/tmp/mysql.sock",
       "--with-mysqli=mysqlnd",
-      "--with-mysql=mysqlnd",
       "--with-pdo-mysql=mysqlnd",
 
     ]
+
+    # with-mysql isn't available after PHP 7.
+    if Gem::Version.new(@resource[:version]) < Gem::Version.new('7.0.0')
+      args << "--with-mysql=mysqlnd"
+    end
 
     # PHP-FPM isn't available until 5.3.3
     if Gem::Version.new(@resource[:version]) > Gem::Version.new('5.3.2')
