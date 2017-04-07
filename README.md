@@ -49,6 +49,7 @@ php::local { '/path/to/my/awesome/project':
 
 # Ensure an extension is installed for a certain php version
 # note, you can't have duplicate resource names so you have to name like so
+$version = '5.4.10'
 php::extension::apc { "apc for ${version}":
   php     => $version,
   version => '3.1.13', # Optionally specify the extension version
@@ -66,8 +67,8 @@ php::fpm { '5.3.23': }
 #  * the version of PHP is installed
 #  * a PHP-FPM service is configured for this PHP version
 #  * a FPM pool is listening on a per project nginx socket
-$name = "project-name"
-$version = "5.4.10"
+$name = 'project-name'
+$version = '5.4.10'
 php::fpm::pool { "${name}-${version}":
   version     => $version,
   socket_path => "${boxen::config::socketdir}/${name}",
@@ -86,7 +87,6 @@ A simple project manifest example:
 # your-boxen/modules/projects/manifests/trollin.pp
 
 class projects::trollin {
-
   php::project { 'trollin':
     source        => 'boxen/trollin',
     elasticsearch => true,

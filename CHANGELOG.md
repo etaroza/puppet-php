@@ -1,3 +1,23 @@
+## 2.1.0 ##
+
+This release may contain breaking changes.
+
+* Specify cache directory for Image Magick extension (Jens Lind)
+* php.ini adjustments (Jens Lind, @typhonius)
+* Use Homebrew OpenSSL and curl (Jens Lind, @alexmace, @olofjohansson)
+* Remove SNMP from compile flags (Jens Lind)
+* Fix usage of libssh2 for ssh2 extension (@rolfvandekrol)
+* Composer updated to 1.2.1 (@alexmace)
+* Add MongoDB extension (@alexmace)
+* Use `ensure_resource` when adding resources (@alexmace)
+* Update brews to use sha256 (@convenient)
+* PHP7/MySQL compatibility (@typhonius)
+* ZLib fixes (@nei, @typhonius)
+* Deprecating ruby 1.8.7 per boxen/boxen#204 (@typhonius)
+* Improve secure version selection (@sambauers)
+* Update PHP secure versions (@sambauers)
+* When no PHP version is specified, default to latest (@sambauers)
+
 ## 2.0.1 ##
 
 * Composer updated to 1.0.0-alpha10 (@alexmace)
