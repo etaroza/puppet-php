@@ -7,21 +7,18 @@ module Puppet::Parser::Functions
     secure_versions = function_hiera( [ 'php::config::secure_versions' ] )
 
     # Specify secure version if no minor point specified
-    if version == '7'
-      patch_version = secure_versions['7.1']
-    elsif version == '7.1'
-      patch_version = secure_versions['7.1']
-    elsif version == '7.0'
-      patch_version = secure_versions['7.0']
-    elsif version == '5'
-      patch_version = secure_versions['5.6']
-    elsif version == '5.6'
-      patch_version = secure_versions['5.6']
-    elsif version == '5.5'
-      patch_version = secure_versions['5.5']
-    else
-      patch_version = version
-    end
+    patch_version = case version.to_s
+                    when '7', '7.1'
+                      secure_versions['7.1']
+                    when '7.0'
+                      secure_versions['7.0']
+                    when '5', '5.6'
+                      secure_versions['5.6']
+                    when '5.5'
+                      secure_versions['5.5']
+                    else
+                      version.to_s
+                    end
 
     # Warn on insecure versions
     display_secure_warning_local = args[1]
