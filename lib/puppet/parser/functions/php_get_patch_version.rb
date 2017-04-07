@@ -30,8 +30,11 @@ module Puppet::Parser::Functions
       Puppet::Parser::Functions.function('versioncmp')
       warning = nil
 
+      # Version is greater than or equal to 7.1.0 and less than the 7.1 secure version
+      if function_versioncmp( [ patch_version, '7.1' ] ) >= 0 && function_versioncmp( [ patch_version, secure_versions['7.1'] ] ) < 0
+        warning = ['7.1.X', secure_versions['7.1']]
       # Version is greater than or equal to 7.0.0 and less than the 7.0 secure version
-      if function_versioncmp( [ patch_version, '7.0' ] ) >= 0 && function_versioncmp( [ patch_version, secure_versions['7.0'] ] ) < 0
+      elsif function_versioncmp( [ patch_version, '7.0' ] ) >= 0 && function_versioncmp( [ patch_version, secure_versions['7.0'] ] ) < 0
         warning = ['7.0.X', secure_versions['7.0']]
       # Version is greater than or equal to 5.6.0 and less than the 5.6 secure version
       elsif function_versioncmp( [ patch_version, '5.6' ] ) >= 0 && function_versioncmp( [ patch_version, secure_versions['5.6'] ] ) < 0
