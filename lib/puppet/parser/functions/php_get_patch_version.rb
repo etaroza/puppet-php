@@ -8,7 +8,9 @@ module Puppet::Parser::Functions
 
     # Specify secure version if no minor point specified
     if version == '7'
-      patch_version = secure_versions['7.0']
+      patch_version = secure_versions['7.1']
+    elsif version == '7.1'
+      patch_version = secure_versions['7.1']
     elsif version == '7.0'
       patch_version = secure_versions['7.0']
     elsif version == '5'
