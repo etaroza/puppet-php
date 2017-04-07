@@ -1,4 +1,5 @@
-# PHP Puppet Module for Boxen
+PHP Puppet Module for Boxen
+===========================
 
 [![Build Status](https://travis-ci.org/boxen/puppet-php.png?branch=master)](https://travis-ci.org/boxen/puppet-php)
 
@@ -24,7 +25,8 @@ The following boxen modules are required if optional PHP extensions are used:
 * `openssl` - Mongodb extension `php::extension::mongodb`
 * `redis` - Redis extension `php::extension::redis`
 
-## Usage
+Usage
+-----
 
 ```puppet
 # Install php 5.4
@@ -77,7 +79,8 @@ php::fpm::pool { "${name}-${version}":
 
 ```
 
-## PHP Project Usage
+PHP Project Usage
+-----------------
 
 A sample PHP project manifest is provided in `manifests/project.pp` which will run a PHP project using PHP-FPM under Nginx. This can be used directly, but may require tweaking for your own purposes.
 
@@ -104,7 +107,8 @@ In the background this is installing PHP 5.3.23, creating a PHP-FPM service for 
 
 The example nginx host template at `templates/nginx/nginx.conf.erb` is also a sample configuration which can be copied to your main boxen module and the nginx template path above altered to match this. This is set up with a basic PHP structure, and Fastcgi params to pass the expected variables from Nginx to PHP-FPM.
 
-## Upgrading to version 2.X.X from version 1.X.X
+Upgrading to version 2.X.X from version 1.X.X
+---------------------------------------------
 
 The old PHP version classes are removed completely in version 2.
 
