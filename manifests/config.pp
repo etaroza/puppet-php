@@ -30,12 +30,12 @@ class php::config(
     $extensioncachedir,
   )
 
-  validate_hash(
-    $configure_params,
-    $composer,
-    $phpenv,
-    $secure_versions,
-  )
+  #validate_hash(
+  #  $configure_params,
+  #  $composer,
+  #  $phpenv,
+  #  $secure_versions,
+  #)
 
   validate_bool(
     $secure_warning,
